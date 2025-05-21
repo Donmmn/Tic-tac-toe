@@ -1,6 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!236 &1
-ClusterInputManager:
-  m_ObjectHideFlags: 0
-  m_Inputs: []
+version https://git-lfs.github.com/spec/v1
+oid sha256:d71a23cfd0e8a06a7f685d458f5a76de30aacf2e59eadfbcb1ded36113c0b291
+size 312

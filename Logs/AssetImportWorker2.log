@@ -483,3 +483,106 @@ Start importing Assets/Resources/Image/j结局CG/864554210534923927.png using Gu
  -> (artifact id: 'f5ca34fb7d78ee42d91a7d04c97dbb59') in 0.072806 seconds
 Number of updated asset objects reloaded before import = 0
 Number of asset objects unloaded after import = 3
+========================================================================
+Received Prepare
+Failed to load 'E:/Programs/unity/jzqDemo/ProjectSettings/InputManager.asset'. File may be corrupted or was serialized with a newer version of Unity.
+Trying to reload asset but can't find object on disk
+Failed to load 'E:/Programs/unity/jzqDemo/ProjectSettings/TagManager.asset'. File may be corrupted or was serialized with a newer version of Unity.
+Trying to reload asset but can't find object on disk
+Failed to load 'E:/Programs/unity/jzqDemo/ProjectSettings/ProjectSettings.asset'. File may be corrupted or was serialized with a newer version of Unity.
+Trying to reload asset but can't find object on disk
+Failed to load 'E:/Programs/unity/jzqDemo/ProjectSettings/AudioManager.asset'. File may be corrupted or was serialized with a newer version of Unity.
+Trying to reload asset but can't find object on disk
+Failed to load 'E:/Programs/unity/jzqDemo/ProjectSettings/TimeManager.asset'. File may be corrupted or was serialized with a newer version of Unity.
+Trying to reload asset but can't find object on disk
+Failed to load 'E:/Programs/unity/jzqDemo/ProjectSettings/DynamicsManager.asset'. File may be corrupted or was serialized with a newer version of Unity.
+Trying to reload asset but can't find object on disk
+Failed to load 'E:/Programs/unity/jzqDemo/ProjectSettings/QualitySettings.asset'. File may be corrupted or was serialized with a newer version of Unity.
+Trying to reload asset but can't find object on disk
+Failed to load 'E:/Programs/unity/jzqDemo/ProjectSettings/EditorBuildSettings.asset'. File may be corrupted or was serialized with a newer version of Unity.
+Trying to reload asset but can't find object on disk
+Failed to load 'E:/Programs/unity/jzqDemo/ProjectSettings/EditorSettings.asset'. File may be corrupted or was serialized with a newer version of Unity.
+Trying to reload asset but can't find object on disk
+Failed to load 'E:/Programs/unity/jzqDemo/ProjectSettings/NavMeshAreas.asset'. File may be corrupted or was serialized with a newer version of Unity.
+Trying to reload asset but can't find object on disk
+Failed to load 'E:/Programs/unity/jzqDemo/ProjectSettings/Physics2DSettings.asset'. File may be corrupted or was serialized with a newer version of Unity.
+Trying to reload asset but can't find object on disk
+Failed to load 'E:/Programs/unity/jzqDemo/ProjectSettings/GraphicsSettings.asset'. File may be corrupted or was serialized with a newer version of Unity.
+Trying to reload asset but can't find object on disk
+Failed to load 'E:/Programs/unity/jzqDemo/ProjectSettings/UnityConnectSettings.asset'. File may be corrupted or was serialized with a newer version of Unity.
+Trying to reload asset but can't find object on disk
+Failed to load 'E:/Programs/unity/jzqDemo/ProjectSettings/ClusterInputManager.asset'. File may be corrupted or was serialized with a newer version of Unity.
+Trying to reload asset but can't find object on disk
+Failed to load 'E:/Programs/unity/jzqDemo/ProjectSettings/PresetManager.asset'. File may be corrupted or was serialized with a newer version of Unity.
+Trying to reload asset but can't find object on disk
+Failed to load 'E:/Programs/unity/jzqDemo/ProjectSettings/VFXManager.asset'. File may be corrupted or was serialized with a newer version of Unity.
+Trying to reload asset but can't find object on disk
+Failed to load 'E:/Programs/unity/jzqDemo/ProjectSettings/VersionControlSettings.asset'. File may be corrupted or was serialized with a newer version of Unity.
+Trying to reload asset but can't find object on disk
+Failed to load 'E:/Programs/unity/jzqDemo/ProjectSettings/MemorySettings.asset'. File may be corrupted or was serialized with a newer version of Unity.
+Trying to reload asset but can't find object on disk
+Failed to load 'E:/Programs/unity/jzqDemo/UserSettings/EditorUserSettings.asset'. File may be corrupted or was serialized with a newer version of Unity.
+Trying to reload asset but can't find object on disk
+Caller must complete domain reload
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  0.655 seconds
+Native extension for WindowsStandalone target not found
+Native extension for iOS target not found
+Native extension for Android target not found
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  1.388 seconds
+Domain Reload Profiling: 2036ms
+	BeginReloadAssembly (230ms)
+		ExecutionOrderSort (0ms)
+		DisableScriptedObjects (9ms)
+		BackupInstance (0ms)
+		ReleaseScriptingObjects (0ms)
+		CreateAndSetChildDomain (60ms)
+	RebuildCommonClasses (35ms)
+	RebuildNativeTypeToScriptingClass (11ms)
+	initialDomainReloadingComplete (46ms)
+	LoadAllAssembliesAndSetupDomain (325ms)
+		LoadAssemblies (425ms)
+		RebuildTransferFunctionScriptingTraits (0ms)
+		AnalyzeDomain (14ms)
+			TypeCache.Refresh (6ms)
+				TypeCache.ScanAssembly (0ms)
+			ScanForSourceGeneratedMonoScriptInfo (0ms)
+			ResolveRequiredComponents (6ms)
+	FinalizeReload (1389ms)
+		ReleaseScriptCaches (0ms)
+		RebuildScriptCaches (0ms)
+		SetupLoadedEditorAssemblies (756ms)
+			LogAssemblyErrors (0ms)
+			InitializePlatformSupportModulesInManaged (49ms)
+			SetLoadedEditorAssemblies (5ms)
+			RefreshPlugins (0ms)
+			BeforeProcessingInitializeOnLoad (105ms)
+			ProcessInitializeOnLoadAttributes (543ms)
+			ProcessInitializeOnLoadMethodAttributes (34ms)
+			AfterProcessingInitializeOnLoad (18ms)
+			EditorAssembliesLoaded (0ms)
+		ExecutionOrderSort2 (0ms)
+		AwakeInstancesAfterBackupRestoration (7ms)
+Refreshing native plugins compatible for Editor in 9.30 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3076 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 14 unused Assets / (28.5 KB). Loaded Objects now: 3584.
+Memory consumption went from 126.1 MB to 126.0 MB.
+Total: 5.899100 ms (FindLiveObjects: 0.337600 ms CreateObjectMapping: 0.311200 ms MarkObjects: 5.138600 ms  DeleteObjects: 0.110300 ms)
+
+Prepare: number of updated asset objects reloaded= 0
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-codec-MediaFoundation-h265: 746d11721c4dcdbdad8f713fa42b33f4 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:CustomObjectIndexerAttribute: 9a22284fe3817be447336de3de66b15e -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:SearchIndexIgnoredProperties: e643bd26f0fe6173181afceb89e7c659 -> 
+  custom:AudioImporter_EditorPlatform: d09bf68614088b80899f8185d706f6e7 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
