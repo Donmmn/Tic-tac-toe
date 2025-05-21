@@ -15,7 +15,9 @@
                 "Image/j结局CG/ending 1/1-1",
                 "Image/j结局CG/ending 1/1-2",
                 "Image/j结局CG/ending 1/865374298032880304"
-            ]
+            ],
+            "BackgroundImagePath": "Image/background/堦恖晹壆俀乮擔拞乯",
+            "BGMusicPath": "Sound/BGM/28319420117-1-192"
         },
         {
             "Id": 2,
@@ -34,7 +36,9 @@
                 "Image/j结局CG/ending 2/865414274514709053",
                 "Image/j结局CG/ending 2/865408220758331615",
                 "Image/j结局CG/ending 2/865426653684184126"
-            ]
+            ],
+            "BackgroundImagePath": "Image/background/嫵幒偺慜偺曽乮擔拞乯",
+            "BGMusicPath": "Sound/BGM/tam-x01"
         },
         {
             "Id": 3,
@@ -51,7 +55,9 @@
                 "Image/j结局CG/ending 3/3-1",
                 "Image/j结局CG/ending 3/3-2",
                 "Image/j结局CG/ending 3/3-3 (2)"
-            ]
+            ],
+            "BackgroundImagePath": "Image/background/彫偝側嵒昹乮擔拞乯",
+            "BGMusicPath": "Sound/BGM/28319420117-1-192"
         },
         {
             "Id": 4,
@@ -68,7 +74,9 @@
                 "Image/j结局CG/ending 4/865574517597040683",
                 "Image/j结局CG/ending 4/865622994892895206",
                 "Image/j结局CG/ending 4/865583577830570112 (1)"
-            ]
+            ],
+            "BackgroundImagePath": "Image/background/岞墍偺搶壆偺儀儞僠乮梉曽乯",
+            "BGMusicPath": "Sound/BGM/tamsp12"
         },
         {
             "Id": 5,
@@ -85,7 +93,9 @@
                 "Image/j结局CG/ending 5/865336659086955553",
                 "Image/j结局CG/ending 5/865305802968181062",
                 "Image/j结局CG/ending 5/865330653648928370"
-            ]
+            ],
+            "BackgroundImagePath": "Image/background/堸怘揦偺揦撪乮栭乯",
+            "BGMusicPath": "Sound/BGM/500001655044608-1-192"
         },
         {
             "Id": 6,
@@ -100,7 +110,9 @@
             "ImagesName": [
                 "Image/j结局CG/ending 6/6-1",
                 "Image/j结局CG/ending 6/6-2"
-            ]
+            ],
+            "BackgroundImagePath": "Image/background/奨拞偺價儖乮擔拞乯",
+            "BGMusicPath": "Sound/BGM/500001655044608-1-192"
         },
         {
             "Id": 7,
@@ -115,11 +127,13 @@
                 "她沉默片刻，忽然抬头。“喂，下一盘我先手。”顿了顿，语气放软了些。“……和你玩，也没那么无聊啦。”\n今汐撇过头，语气倔强。她手指还在桌面轻点，像是想掩饰小小的懊恼。"
             ],
             "ImagesName": [
-                "",
-                "",
-                "",
-                ""
-            ]
+                "Image/j结局CG/ending 7/865660562971836380",
+                "Image/j结局CG/ending 7/865677024507742009",
+                "Image/j结局CG/ending 7/865694831442158316",
+                "Image/j结局CG/ending 7/865695036526854595"
+            ],
+            "BackgroundImagePath": "Image/background/嫵幒偺慜偺曽乮擔拞乯",
+            "BGMusicPath": "Sound/BGM/28319420117-1-192"
         },
         {
             "Id": 8,
@@ -131,16 +145,16 @@
                 "嘿嘿嘿……",
                 "”今天和你玩得很开心呢。开拓……哦不，漂泊者“",
                 "”你问我是我？放心吧，你最爱的小汐汐安全着呢“",
-                "她扯下束发缎带，狐狸面具从虚空中浮现。\"猜猜看——\"面具下传来花火标志性的咯咯笑声\"下次见咯！\"",
-                "夕阳将两人影子拉长投在防波堤上，今汐指着远处钓鱼人的桶：\"看，像不像我们装棋子的...\"话未说完就被浪声打断，她笑着把被风吹乱的发丝别到耳后，这个动作让两人同时想起对弈时她思考惯用的撩发姿势。"
+                "她扯下束发缎带，狐狸面具从虚空中浮现。\"猜猜看——\"面具下传来花火标志性的咯咯笑声\"下次见咯！\""
             ],
             "ImagesName": [
-                "",
-                "",
-                "",
-                "",
-                ""
-            ]
+                "Image/j结局CG/ending 8/865715439769025406",
+                "Image/j结局CG/ending 8/865719552200150138",
+                "Image/j结局CG/ending 8/865721141338061422",
+                "Image/j结局CG/ending 8/865729615308532512"
+            ],
+            "BackgroundImagePath": "Image/background/堦恖晹壆俀乮栭丒徠柧OFF乯",
+            "BGMusicPath": "Sound/BGM/28319420117-1-192"
         },
         {
             "Id": 9,
@@ -157,7 +171,9 @@
                 "Image/j结局CG/ending 9/865342323075117583",
                 "Image/j结局CG/ending 9/864608518248913444",
                 "Image/j结局CG/ending 9/864952224080470252"
-            ]
+            ],
+            "BackgroundImagePath": "Image/background/堦恖晹壆俀乮栭丒徠柧OFF乯",
+            "BGMusicPath": ""
         },
         {
             "Id": 10,
@@ -166,19 +182,19 @@
             "PlayerWin": false,
             "title": "膝枕",
             "EndingText": [
-                "棋盘上，“X”连成一线，我无力地低头认输。今汐淡淡地说：“看来这次是我赢了。”",
-                "其实，最近连续的疲惫让我有些撑不住，心情也难免低落。输了棋，只是更添几分失落。",
+                "棋盘上，“X”连成一线，我无力地低头认输。今汐淡淡地说：“看来这次是我赢了。”其实，最近连续的疲惫让我有些撑不住，心情也难免低落。输了棋，只是更添几分失落。",
                 "我轻轻地靠近，把头枕在她的膝盖上，不自觉地寻求一丝安慰。\n她的手指无意识地轻轻拂过我的头发，动作冷静淡然，却透着一丝不易察觉的温柔。",
                 "“别太在意输赢，”她低声说，“只是游戏而已。”",
                 "膝盖上传来的温暖安静而真实，虽言语冷淡，但此刻她没有拒绝，也没有赶走我。或许，她愿意让我暂时依靠。"
             ],
             "ImagesName": [
-                "",
-                "",
-                "",
-                "",
-                ""
-            ]
+                "Image/j结局CG/ending 10/865738802243578663",
+                "Image/j结局CG/ending 10/865730089902468539",
+                "Image/j结局CG/ending 10/865733747067100629",
+                "Image/j结局CG/ending 10/865737337659720255"
+            ],
+            "BackgroundImagePath": "Image/background/彫偝側嵒昹乮擔拞乯",
+            "BGMusicPath": "Sound/BGM/25685525979-1-192"
         },
         {
             "Id": 11,
@@ -195,7 +211,9 @@
                 "Image/j结局CG/ending 11/864694471281931448",
                 "Image/j结局CG/ending 11/865434523138029707",
                 "Image/j结局CG/ending 11/864904039916116420"
-            ]
+            ],
+            "BackgroundImagePath": "Image/background/堦恖晹壆俀乮擔拞乯",
+            "BGMusicPath": "Sound/BGM/27679982908-1-192"
         },
         {
             "Id": 12,
@@ -212,7 +230,9 @@
                 "Image/j结局CG/ending 12/864686763963081496",
                 "Image/j结局CG/ending 12/865342399310739397",
                 "Image/j结局CG/ending 12/865345882529234297"
-            ]
+            ],
+            "BackgroundImagePath": "Image/background/堦恖晹壆俁乮梉曽乯",
+            "BGMusicPath": "Sound/BGM/tam-x01"
         }
     ]
 }

@@ -38,11 +38,15 @@ public class boardState : MonoBehaviour
     public Text Player1Score;
     public Text Player2Score;
     public int[] Score = new int[2]; // 0: Player1 (X), 1: Player2 (O)
-    private const int TARGET_SCORE_TO_WIN_GAME = 7;
+    private const int TARGET_SCORE_TO_WIN_GAME = 5;
     private bool isMatchOver = false;
     public Text resettingBoardStatusText; // 新增：用于显示棋盘重置状态的文本
     private Coroutine ellipsisAnimationCoroutine; // 用于存储省略号动画协程的引用
     private Coroutine temporaryMessageCoroutine; // 新增：用于临时消息显示的协程引用
+    private Coroutine _delayedResetCoroutine; // Added to manage the auto-reset coroutine
+
+    public bool IsCurrentlyResettingAfterRoundEnd { get; private set; } = false; // New flag
+    public bool WasBoardFullJustBeforeThisReset { get; private set; } = false; // New flag for board fullness check
 
     [Header("Audio Settings")]
     [Tooltip("用于播放游戏音效的AudioSource组件")]
@@ -85,6 +89,27 @@ public class boardState : MonoBehaviour
 
     public void ResetBoard()
     {
+        // Stop the delayed auto-reset coroutine if it's running
+        if (_delayedResetCoroutine != null)
+        {
+            StopCoroutine(_delayedResetCoroutine);
+            _delayedResetCoroutine = null;
+            Debug.Log("手动重置棋盘，已取消自动延时重置。");
+
+            if (ellipsisAnimationCoroutine != null)
+            {
+                // StopCoroutine(ellipsisAnimationCoroutine); // This will be stopped by stopping _delayedResetCoroutine if it was its child
+                // ellipsisAnimationCoroutine = null;
+            }
+            if (resettingBoardStatusText != null && resettingBoardStatusText.gameObject.activeSelf)
+            {
+                resettingBoardStatusText.gameObject.SetActive(false);
+            }
+        }
+
+        // Check and store if the board is full BEFORE clearing it
+        WasBoardFullJustBeforeThisReset = IsFull(); 
+
         if (AudioManager.Instance != null)
         {
             AudioManager.Instance.PlayResetSound();
@@ -164,7 +189,11 @@ public class boardState : MonoBehaviour
         else // 如果比赛未结束 (即 !isMatchOver)
         {
             // 如果比赛未结束，则延迟2秒后自动重置棋盘准备下一局
-            StartCoroutine(DelayedResetBoardAfterRoundWin());
+            if (_delayedResetCoroutine != null)
+            {
+                StopCoroutine(_delayedResetCoroutine);
+            }
+            _delayedResetCoroutine = StartCoroutine(DelayedResetBoardAfterRoundWin());
         }
 
         // 如果比赛未结束，则准备下一局 (通常 ResetBoard 会在这里或由外部逻辑调用)
@@ -180,6 +209,14 @@ public class boardState : MonoBehaviour
         Action buttonAction = null;
         int? endingIdToShow = endingResult.EndingId; // 保存ID供后续使用
 
+        // 定义CGViewer关闭后的通用回调
+        Action cgViewerClosedAction = () => {
+            Debug.Log("CGViewer closed callback: Attempting to show main menu and play main BGM.");
+            if (UIManager.Instance != null) UIManager.Instance.ShowMainMenu(); // 或者其他适当的界面
+            // 主BGM的播放现在由UIManager.ShowMainMenu()更可靠地处理，此处不再重复调用，以避免潜在的两次播放或冲突。
+            // if (AudioManager.Instance != null) AudioManager.Instance.PlayMainBGM(1f);
+        };
+
         switch (endingResult.Type) // <--- 使用 result.Type
         {
             case EndingType.newEnding:
@@ -189,11 +226,12 @@ public class boardState : MonoBehaviour
                     if (endingIdToShow.HasValue)
                     {
                         Debug.Log($"尝试进入新结局 ID: {endingIdToShow.Value}");
-                        UIManager.Instance.ShowCGViewer(endingIdToShow.Value);
+                        UIManager.Instance.ShowCGViewer(endingIdToShow.Value, cgViewerClosedAction); // 使用通用回调
                     }
                     else
                     {
                         Debug.LogError("新结局ID无效，无法显示CG。检查PlayerProcess.CheckAndUnlockEnding逻辑。");
+                        cgViewerClosedAction(); // 如果无法显示CG，也执行关闭后的操作（如返回主菜单）
                     }
                 };
                 break;
@@ -204,11 +242,12 @@ public class boardState : MonoBehaviour
                     if (endingIdToShow.HasValue)
                     {
                         Debug.Log($"尝试查看旧结局 ID: {endingIdToShow.Value}");
-                        UIManager.Instance.ShowCGViewer(endingIdToShow.Value);
+                        UIManager.Instance.ShowCGViewer(endingIdToShow.Value, cgViewerClosedAction); // 使用通用回调
                     }
                     else
                     {
                         Debug.LogError("旧结局ID无效，无法显示CG。检查PlayerProcess.CheckAndUnlockEnding逻辑。");
+                        cgViewerClosedAction(); // 如果无法显示CG，也执行关闭后的操作
                     }
                 };
                 break;
@@ -218,6 +257,7 @@ public class boardState : MonoBehaviour
                 buttonAction = () => {
                     Debug.Log("结局未达成，返回或重试... (具体逻辑待实现)");
                     // 例如: 返回主菜单或重置游戏
+                    cgViewerClosedAction(); // 未达成结局时，也执行关闭后的操作（返回主菜单）
                 };
                 break;
             default:
@@ -257,46 +297,62 @@ public class boardState : MonoBehaviour
 
     private IEnumerator DelayedResetBoardAfterRoundWin()
     {
-        // 停止任何正在显示的临时消息，因为棋盘重置消息优先级更高
-        if (temporaryMessageCoroutine != null)
+        try
         {
-            StopCoroutine(temporaryMessageCoroutine);
-            temporaryMessageCoroutine = null;
-        }
-        // 确保之前的省略号动画（如果因某种原因未停止）也被停止
-        if (ellipsisAnimationCoroutine != null)
-        {
-            StopCoroutine(ellipsisAnimationCoroutine);
-            // ellipsisAnimationCoroutine = null; //  下面会重新赋值
-        }
+            IsCurrentlyResettingAfterRoundEnd = true; // Set flag indicating context
 
-        if (resettingBoardStatusText != null)
-        {
-            resettingBoardStatusText.gameObject.SetActive(true);
+            // 停止任何正在显示的临时消息，因为棋盘重置消息优先级更高
+            if (temporaryMessageCoroutine != null)
+            {
+                StopCoroutine(temporaryMessageCoroutine);
+                temporaryMessageCoroutine = null;
+            }
+            // 确保之前的省略号动画（如果因某种原因未停止）也被停止
             if (ellipsisAnimationCoroutine != null)
             {
                 StopCoroutine(ellipsisAnimationCoroutine);
             }
-            ellipsisAnimationCoroutine = StartCoroutine(AnimateResettingText("正在清理棋盘"));
-        }
 
-        yield return new WaitForSeconds(2f);
+            if (resettingBoardStatusText != null)
+            {
+                resettingBoardStatusText.gameObject.SetActive(true);
+                if (ellipsisAnimationCoroutine != null)
+                {
+                    StopCoroutine(ellipsisAnimationCoroutine);
+                }
+                ellipsisAnimationCoroutine = StartCoroutine(AnimateResettingText("正在清理棋盘"));
+            }
 
-        if (ellipsisAnimationCoroutine != null)
-        {
-            StopCoroutine(ellipsisAnimationCoroutine);
-            ellipsisAnimationCoroutine = null;
-        }
-        if (resettingBoardStatusText != null)
-        {
-            resettingBoardStatusText.gameObject.SetActive(false);
-        }
+            yield return new WaitForSeconds(2f);
 
-        if (!isMatchOver) // 再次检查，以防在这2秒内状态改变
-        {
-            Debug.Log("单局结束，2秒后自动重置棋盘。");
-            ResetBoard();
+            if (ellipsisAnimationCoroutine != null)
+            {
+                StopCoroutine(ellipsisAnimationCoroutine);
+                ellipsisAnimationCoroutine = null;
+            }
+            if (resettingBoardStatusText != null)
+            {
+                resettingBoardStatusText.gameObject.SetActive(false);
+            }
+
+            if (!isMatchOver) // 再次检查，以防在这2秒内状态改变
+            {
+                Debug.Log("单局结束，2秒后自动重置棋盘。");
+                ResetBoard();
+            }
         }
+        finally
+        {
+            IsCurrentlyResettingAfterRoundEnd = false; // Reset flag in all cases
+            // If the coroutine completes naturally, nullify the reference if it's this instance.
+            // This check helps if the coroutine could be restarted very quickly, though
+            // current logic stops the old one before starting a new one.
+            if (_delayedResetCoroutine == this._delayedResetCoroutine) // Check if it's THIS coroutine instance
+            {
+               // _delayedResetCoroutine = null; // Managed by the caller or manual reset now
+            }    
+        }
+        _delayedResetCoroutine = null; // ensure it's nulled when coroutine ends
     }
 
     private IEnumerator AnimateResettingText(string baseMessage)
@@ -459,7 +515,11 @@ public class boardState : MonoBehaviour
                 OnGameDraw?.Invoke();
                 if (!isMatchOver) // 新增：平局且比赛未结束时，也延迟重置棋盘
                 {
-                    StartCoroutine(DelayedResetBoardAfterRoundWin());
+                    if (_delayedResetCoroutine != null)
+                    {
+                        StopCoroutine(_delayedResetCoroutine);
+                    }
+                    _delayedResetCoroutine = StartCoroutine(DelayedResetBoardAfterRoundWin());
                 }
                 return;
             }

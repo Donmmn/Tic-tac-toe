@@ -73,6 +73,54 @@ public class EndingEditorWindow : EditorWindow
             }
             currentEnding.PlayerWin = EditorGUILayout.Toggle("是否玩家获胜结局", currentEnding.PlayerWin); 
 
+            // 新增：结局专属背景图片和BGM
+            EditorGUILayout.Space();
+            GUILayout.Label("结局专属资源:", EditorStyles.boldLabel);
+
+            // 背景图片选择
+            EditorGUILayout.BeginHorizontal();
+            currentEnding.BackgroundImagePath = EditorGUILayout.TextField("背景图路径:", currentEnding.BackgroundImagePath, GUILayout.Width(StepTextAreaWidth + 50)); // 稍微加宽
+            Texture2D backgroundImage = null;
+            if (!string.IsNullOrEmpty(currentEnding.BackgroundImagePath))
+            {
+                backgroundImage = Resources.Load<Texture2D>(currentEnding.BackgroundImagePath);
+            }
+            Texture2D selectedBgTexture = (Texture2D)EditorGUILayout.ObjectField(backgroundImage, typeof(Texture2D), false, GUILayout.Height(40), GUILayout.Width(RightPanelImageControlsWidth - 60)); // 调整宽度
+            if (selectedBgTexture != backgroundImage)
+            {
+                if (selectedBgTexture != null)
+                {
+                    string bgPath = GetTextureResourcePath(selectedBgTexture);
+                    if (!string.IsNullOrEmpty(bgPath)) currentEnding.BackgroundImagePath = bgPath;
+                    else Debug.LogWarning("选择的背景图片不在 Resources 文件夹内。");
+                }
+                else currentEnding.BackgroundImagePath = string.Empty;
+                GUI.FocusControl(null); Repaint();
+            }
+            EditorGUILayout.EndHorizontal();
+
+            // BGM选择
+            EditorGUILayout.BeginHorizontal();
+            currentEnding.BGMusicPath = EditorGUILayout.TextField("BGM路径:", currentEnding.BGMusicPath, GUILayout.Width(StepTextAreaWidth + 50));
+            AudioClip bgMusic = null;
+            if (!string.IsNullOrEmpty(currentEnding.BGMusicPath))
+            {
+                bgMusic = Resources.Load<AudioClip>(currentEnding.BGMusicPath);
+            }
+            AudioClip selectedBgMusic = (AudioClip)EditorGUILayout.ObjectField(bgMusic, typeof(AudioClip), false, GUILayout.Height(40), GUILayout.Width(RightPanelImageControlsWidth - 60));
+            if (selectedBgMusic != bgMusic)
+            {
+                if (selectedBgMusic != null)
+                {
+                    string musicPath = GetAudioClipResourcePath(selectedBgMusic); // 需要一个新的辅助方法
+                    if (!string.IsNullOrEmpty(musicPath)) currentEnding.BGMusicPath = musicPath;
+                    else Debug.LogWarning("选择的BGM不在 Resources 文件夹内。");
+                }
+                else currentEnding.BGMusicPath = string.Empty;
+                GUI.FocusControl(null); Repaint();
+            }
+            EditorGUILayout.EndHorizontal();
+
             EditorGUILayout.Space();
             GUILayout.Label("结局内容 (文本和图片):", EditorStyles.boldLabel);
 
@@ -211,6 +259,8 @@ public class EndingEditorWindow : EditorWindow
         newEnding.PlayerWin = false; 
         newEnding.EndingText = new string[] { "结局步骤 1 的默认文本。" }; 
         newEnding.ImagesName = new string[] { "" }; 
+        newEnding.BackgroundImagePath = ""; // 初始化新字段
+        newEnding.BGMusicPath = "";         // 初始化新字段
         endingsList.Add(newEnding);
         GUI.FocusControl(null); 
     }
@@ -318,6 +368,31 @@ public class EndingEditorWindow : EditorWindow
         else
         {
             return string.Empty; 
+        }
+    }
+
+    // 新增：获取AudioClip在Resources中的路径
+    private string GetAudioClipResourcePath(AudioClip audioClip)
+    {
+        if (audioClip == null) return string.Empty;
+
+        string path = AssetDatabase.GetAssetPath(audioClip);
+        if (string.IsNullOrEmpty(path)) return string.Empty;
+
+        if (path.StartsWith("Assets/Resources/"))
+        {
+            string resourcesRelativePath = path.Substring("Assets/Resources/".Length);
+            // 移除文件扩展名
+            int dotIndex = resourcesRelativePath.LastIndexOf('.');
+            if (dotIndex > 0)
+            {
+                return resourcesRelativePath.Substring(0, dotIndex);
+            }
+            return resourcesRelativePath; // 如果没有扩展名（不太可能，但作为后备）
+        }
+        else
+        {
+            return string.Empty; // 不在Resources文件夹中
         }
     }
 } 

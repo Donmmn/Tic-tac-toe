@@ -2,7 +2,7 @@
     "allEventSettings": [
         {
             "eventIdentifier": "OnPlayerWinsGame",
-            "moodEffect": 0.0,
+            "moodEffect": 1.0,
             "sanityEffect": 5.0,
             "dialogueTriggerProbability": 0.7699999809265137,
             "emotionChances": [
@@ -31,7 +31,7 @@
         },
         {
             "eventIdentifier": "OnAIWinsGame",
-            "moodEffect": 15.0,
+            "moodEffect": 18.0,
             "sanityEffect": 10.0,
             "dialogueTriggerProbability": 1.0,
             "emotionChances": [
@@ -118,7 +118,7 @@
         {
             "eventIdentifier": "OnBoardReset",
             "moodEffect": 5.0,
-            "sanityEffect": 0.0,
+            "sanityEffect": -1.0,
             "dialogueTriggerProbability": 0.20000000298023225,
             "emotionChances": [
                 {
@@ -164,6 +164,44 @@
                     "targetEmotion": 6,
                     "weight": 1.0,
                     "selectedDialogueIndex": 0
+                }
+            ],
+            "isFoldedOut": true
+        },
+        {
+            "eventIdentifier": "OnHeadPatted",
+            "moodEffect": 10.0,
+            "sanityEffect": -5.0,
+            "dialogueTriggerProbability": 0.8999999761581421,
+            "emotionChances": [
+                {
+                    "targetEmotion": 7,
+                    "weight": 1.0,
+                    "selectedDialogueIndex": 0
+                },
+                {
+                    "targetEmotion": 7,
+                    "weight": 1.0,
+                    "selectedDialogueIndex": 1
+                }
+            ],
+            "isFoldedOut": true
+        },
+        {
+            "eventIdentifier": "OnChestPatted",
+            "moodEffect": -7.0,
+            "sanityEffect": 5.0,
+            "dialogueTriggerProbability": 1.0,
+            "emotionChances": [
+                {
+                    "targetEmotion": 8,
+                    "weight": 1.0,
+                    "selectedDialogueIndex": 0
+                },
+                {
+                    "targetEmotion": 8,
+                    "weight": 1.0,
+                    "selectedDialogueIndex": 1
                 }
             ],
             "isFoldedOut": true

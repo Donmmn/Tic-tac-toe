@@ -7,6 +7,7 @@ using System;
 public class CGviewer : MonoBehaviour
 {
     [Header("UI Elements")]
+    [SerializeField] private Image backgroundImageComponent; // 新增：用于显示结局背景图
     [SerializeField] private Text titleText;
     [SerializeField] private Text bodyText;
     [SerializeField] private Image displayImage;
@@ -14,6 +15,8 @@ public class CGviewer : MonoBehaviour
     [SerializeField] private Button prevButton;
     [SerializeField] private Button exitButton;
     [SerializeField] private Button skipTextButton; // 用于快进文本的按钮 (例如屏幕中央的透明按钮)
+    [SerializeField] private Button toggleSubtitlesButton; // 新增：用于切换字幕可见性的按钮
+    [SerializeField] private Text toggleSubtitlesButtonText; // 新增：切换字幕按钮上的文本
 
     [Header("Settings")]
     [SerializeField] private float typewriterDelay = 0.05f;
@@ -25,6 +28,7 @@ public class CGviewer : MonoBehaviour
     private Coroutine titleDisplayCoroutine;
     private bool fullTextDisplayedForPage = false;
     private string currentFullPageText = "";
+    private bool areSubtitlesHidden = false; // 新增：字幕是否隐藏的状态
 
     private Action customOnCloseCallback; // 新增：用于自定义关闭行为的回调
 
@@ -34,6 +38,7 @@ public class CGviewer : MonoBehaviour
         if (prevButton != null) prevButton.onClick.AddListener(OnPrevButtonClicked);
         if (exitButton != null) exitButton.onClick.AddListener(ExitToMainMenu);
         if (skipTextButton != null) skipTextButton.onClick.AddListener(OnSkipTextButtonClicked);
+        if (toggleSubtitlesButton != null) toggleSubtitlesButton.onClick.AddListener(ToggleSubtitles); // 新增
 
         // 添加点击事件监听
         if (gameObject.GetComponent<Button>() == null)
@@ -43,6 +48,9 @@ public class CGviewer : MonoBehaviour
         }
 
         gameObject.SetActive(false); // CG查看器默认不显示
+
+        // 初始化字幕按钮文本
+        UpdateSubtitleButtonText(); // 新增
     }
 
     public void SetOnCloseCallback(Action callback)
@@ -61,7 +69,7 @@ public class CGviewer : MonoBehaviour
             {
                 titleText.gameObject.SetActive(false);
             }
-            // 直接加载第一页内容
+            // 直接加载第一页内容 (此时背景和BGM应已设置)
             LoadPageContent(currentPageIndex);
         }
     }
@@ -71,6 +79,7 @@ public class CGviewer : MonoBehaviour
         if (PlayerProcess.Instance == null)
         {
             Debug.LogError("CGviewer: PlayerProcess.Instance is null. Cannot load ending.");
+            gameObject.SetActive(false); // 确保CG查看器被隐藏
             return;
         }
         currentEnding = PlayerProcess.Instance.GetEndingById(endingId);
@@ -84,6 +93,49 @@ public class CGviewer : MonoBehaviour
         
         gameObject.SetActive(true);
         currentPageIndex = 0;
+
+        // 设置结局背景图片
+        if (backgroundImageComponent != null)
+        {
+            if (!string.IsNullOrEmpty(currentEnding.BackgroundImagePath))
+            {
+                Sprite bgSprite = Resources.Load<Sprite>(currentEnding.BackgroundImagePath);
+                if (bgSprite != null)
+                {
+                    backgroundImageComponent.sprite = bgSprite;
+                    backgroundImageComponent.gameObject.SetActive(true);
+                }
+                else
+                {
+                    Debug.LogWarning($"CGviewer: Could not load background image '{currentEnding.BackgroundImagePath}' from Resources.");
+                    backgroundImageComponent.gameObject.SetActive(false);
+                }
+            }
+            else
+            {
+                backgroundImageComponent.gameObject.SetActive(false); // 如果没有配置背景图，则隐藏
+            }
+        }
+
+        // 播放结局BGM
+        if (AudioManager.Instance != null && !string.IsNullOrEmpty(currentEnding.BGMusicPath))
+        {
+            AudioClip endingMusic = Resources.Load<AudioClip>(currentEnding.BGMusicPath);
+            if (endingMusic != null)
+            {
+                AudioManager.Instance.PlayBGM(endingMusic, true, 1f); // 使用1秒渐变，可调整
+            }
+            else
+            {
+                Debug.LogWarning($"CGviewer: Could not load BGM '{currentEnding.BGMusicPath}' from Resources. Main BGM might still be playing or it might be silent.");
+                 // 可选：如果结局BGM加载失败，明确停止当前BGM或播放默认静音，而不是让主BGM继续
+                // AudioManager.Instance.PlayBGM(null, true, 0.5f); // 渐隐当前BGM
+            }
+        }
+        // else if (AudioManager.Instance != null) {
+            // AudioManager.Instance.PlayBGM(null, true, 0.5f); // 如果没有配置结局BGM，渐隐当前BGM
+        // }
+
         StartCoroutine(ShowTitleAndFirstPageSequence());
     }
 
@@ -183,6 +235,7 @@ public class CGviewer : MonoBehaviour
                 fullTextDisplayedForPage = true;
                 typewriterCoroutine = null;
             }
+            bodyText.gameObject.SetActive(!areSubtitlesHidden); // 新增：根据状态设置文本可见性
         }
         
         LoadImageForPage(pageIndex);
@@ -217,12 +270,20 @@ public class CGviewer : MonoBehaviour
     private IEnumerator TypewriterEffect(string textToType)
     {
         if (bodyText == null) yield break;
-        bodyText.text = "";
+        bodyText.text = ""; // 即使隐藏也要先清空，以便显示时从头开始
         fullTextDisplayedForPage = false; // 重置状态
         foreach (char letter in textToType.ToCharArray())
         {
-            bodyText.text += letter;
+            if (!areSubtitlesHidden) // 新增：仅在字幕可见时更新文本
+            {
+                bodyText.text += letter;
+            }
             yield return new WaitForSeconds(typewriterDelay);
+        }
+        // 打字结束后，即使是隐藏的，也更新完整文本，以便切换回显示状态时能看到完整内容
+        if (areSubtitlesHidden && bodyText != null)
+        {
+            bodyText.text = textToType;
         }
         typewriterCoroutine = null;
         fullTextDisplayedForPage = true;
@@ -236,8 +297,9 @@ public class CGviewer : MonoBehaviour
         }
         if (bodyText != null && !fullTextDisplayedForPage)
         {
-            bodyText.text = currentFullPageText;
+            bodyText.text = currentFullPageText; // 无论是否隐藏，都填充完整文本
             fullTextDisplayedForPage = true;
+            // 字幕的可见性由 areSubtitlesHidden 和 bodyText.gameObject.SetActive 控制
         }
     }
 
@@ -345,7 +407,7 @@ public class CGviewer : MonoBehaviour
                 "剧情已结束", // 消息简化
                 "从头播放",
                 () => {
-                    // 从头播放
+                    // 从头播放 (此时结局的背景和BGM应该已经是当前结局的，所以直接重置页面和标题序列)
                     currentPageIndex = 0;
                     StartCoroutine(ShowTitleAndFirstPageSequence());
                 },
@@ -390,8 +452,16 @@ public class CGviewer : MonoBehaviour
             Debug.LogWarning("CGViewer: ExitToMainMenu called, but a customOnCloseCallback exists. The callback should have been called instead.");
             // 理论上，如果 customOnCloseCallback 存在，ShowEndingPopup 应该调用它而不是 ExitToMainMenu
             // 但作为安全措施，如果意外调用到这里，我们也优先执行自定义回调
-            customOnCloseCallback.Invoke(); 
-            return;
+            customOnCloseCallback.Invoke(); // 这里不直接return，因为customOnCloseCallback可能不包含恢复BGM的逻辑
+            // return; // Previous version had a return here.
+        }
+
+        // 恢复主BGM的逻辑移至UIManager.ShowMainMenu或自定义回调中更合适，
+        // 因为CGViewer自身关闭时，AudioManager实例可能仍然存在。
+        // 此处调用会确保在直接通过此方法退出时BGM被重置。
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayMainBGM(1f); // 使用1秒渐变切回主BGM
         }
 
         if (UIManager.Instance != null)
@@ -457,5 +527,46 @@ public class CGviewer : MonoBehaviour
         if (prevButton != null) prevButton.onClick.RemoveAllListeners();
         if (exitButton != null) exitButton.onClick.RemoveAllListeners();
         if (skipTextButton != null) skipTextButton.onClick.RemoveAllListeners();
+        if (toggleSubtitlesButton != null) toggleSubtitlesButton.onClick.RemoveListener(ToggleSubtitles); // 新增
+    }
+
+    // 新增方法：切换字幕可见性
+    private void ToggleSubtitles()
+    {
+        areSubtitlesHidden = !areSubtitlesHidden;
+        UpdateSubtitleButtonText();
+
+        if (bodyText != null)
+        {
+            bodyText.gameObject.SetActive(!areSubtitlesHidden);
+            if (!areSubtitlesHidden)
+            {
+                // 如果是重新显示字幕
+                if (typewriterCoroutine != null)
+                {
+                    // 如果打字机还在运行（理论上不应该，因为隐藏时打字机不直接更新UI text但会跑完）
+                    // 为了保险，直接显示完整文本
+                    StopCoroutine(typewriterCoroutine);
+                    typewriterCoroutine = null;
+                    bodyText.text = currentFullPageText;
+                    fullTextDisplayedForPage = true;
+                }
+                else if (!string.IsNullOrEmpty(currentFullPageText))
+                {
+                    // 如果打字机已结束或从未开始，显示当前页的完整文本
+                    bodyText.text = currentFullPageText;
+                }
+                // 如果 currentFullPageText 为空，则 bodyText.text 已经通过 LoadPageContent 或 TypewriterEffect 初始化为空字符串
+            }
+        }
+    }
+
+    // 新增方法：更新字幕切换按钮的文本
+    private void UpdateSubtitleButtonText()
+    {
+        if (toggleSubtitlesButtonText != null)
+        {
+            toggleSubtitlesButtonText.text = areSubtitlesHidden ? "显示字幕" : "隐藏字幕";
+        }
     }
 }

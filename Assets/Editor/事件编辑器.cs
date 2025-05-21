@@ -65,7 +65,9 @@ public class EventConfigEditorWindow : EditorWindow
         "OnPlayerAlmostWins",
         "OnAIAlmostWins",
         "OnBoardReset",
-        "OnPlayerBlockedAIWin"
+        "OnPlayerBlockedAIWin",
+        "OnHeadPatted",
+        "OnChestPatted"
     };
   
     [MenuItem("工具/事件配置编辑器")]

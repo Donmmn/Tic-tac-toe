@@ -40,6 +40,19 @@ public class UIManager : MonoSingleton<UIManager>
 
     public void ShowMainMenu()
     {     
+        // 确保返回主菜单时，尝试播放主BGM
+        if (AudioManager.Instance != null)
+        {
+            if (!AudioManager.Instance.IsPlayingMainBGM())
+            {
+                AudioManager.Instance.PlayMainBGM(0.5f); // 使用0.5秒渐变或根据需要调整
+            }
+            else
+            {
+                Debug.Log("UIManager: Main BGM is already playing.");
+            }
+        }
+
         // 新增：尝试重置棋盘和分数
         boardState gameBoard = gameplayCanvas.GetComponentInChildren<boardState>();
         if (gameBoard != null)

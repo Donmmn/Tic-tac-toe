@@ -9,6 +9,7 @@ public class PopupWindows : MonoBehaviour
     [Header("UI 元素")]
     [SerializeField] private Text messageText; // 用于显示文本 (修改为 Text)
     [SerializeField] private Image displayImage;       // 用于显示图片
+    [SerializeField] private Image BlurImage;          // 新增：用于背景模糊的Image
     [SerializeField] private Button closeButton;        // 关闭按钮
     [SerializeField] private Button functionButton1;    // 功能按钮1
     [SerializeField] private Text functionButton1Text; // 功能按钮1的文本
@@ -33,6 +34,46 @@ public class PopupWindows : MonoBehaviour
     private bool isMultiPageIgnorable;
     private Action onMultiPageIgnoreAction;
     private string multiPageIgnoreButtonTextContent = "不再提示";
+
+    void OnEnable() // 新增 OnEnable 方法
+    {
+        if (BlurImage != null)
+        {
+            bool assignMaterial = false;
+            if (BlurImage.material == null)
+            {
+                assignMaterial = true;
+                Debug.Log("PopupWindows: BlurImage material is null, attempting to load BlurEffect.");
+            }
+            // 如果材质名不是 "BlurEffect" (注意，实例化的材质名后面可能会有 " (Instance)")
+            // 为了确保我们总是使用项目中的原始共享材质，或者如果当前材质就是默认UI材质，我们也需要设置它。
+            // 直接比较材质名称 "BlurEffect" 来决定是否加载。
+            else if (BlurImage.material.name != "BlurEffect")
+            {
+                assignMaterial = true;
+                Debug.Log($"PopupWindows: BlurImage material is '{BlurImage.material.name}', attempting to load BlurEffect.");
+            }
+
+            if (assignMaterial)
+            {
+                Material blurEffectMaterial = Resources.Load<Material>("Material/BlurEffect");
+                if (blurEffectMaterial != null)
+                {
+                    BlurImage.material = blurEffectMaterial;
+                    Debug.Log("PopupWindows: BlurImage material successfully set to BlurEffect.");
+                }
+                else
+                {
+                    Debug.LogError("PopupWindows: Failed to load Material 'Material/BlurEffect' from Resources. Please ensure it exists at the correct path and is not corrupted.");
+                }
+            }
+            // 如果 assignMaterial 为 false，则表示材质已经是 BlurEffect，无需操作。
+        }
+        // else
+        // {
+        //     Debug.LogWarning("PopupWindows: BlurImage is not assigned in the Inspector. Cannot apply blur effect material logic.");
+        // }
+    }
 
     void Awake() // 使用 Awake 确保在 Start 之前初始化
     {

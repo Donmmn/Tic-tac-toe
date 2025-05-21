@@ -66,6 +66,7 @@
     <Compile Include="Assets\Scripts\首页\frontpage.cs" />
     <Compile Include="Assets\Scripts\PlayerProcess.cs" />
     <Compile Include="Assets\Scripts\CG页\CGviewer.cs" />
+    <Compile Include="Assets\Scripts\人物交互\UISwipeInteraction.cs" />
     <Compile Include="Assets\Scripts\弹窗\PopupWindows.cs" />
     <Compile Include="Assets\Scripts\主游戏页面\boardState.cs" />
     <Compile Include="Assets\Scripts\主游戏页面\MainUI.cs" />

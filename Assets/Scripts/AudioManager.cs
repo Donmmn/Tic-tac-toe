@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.IO;
+using System.Collections; // Needed for Coroutines
 
 public class AudioManager : MonoBehaviourSingleton<AudioManager>
 {
@@ -8,6 +9,11 @@ public class AudioManager : MonoBehaviourSingleton<AudioManager>
     public float BGMVolume = 1f;
     [Range(0f, 1f)]
     public float SFXVolume = 1f;
+
+    [Header("主BGM设置")]
+    [Tooltip("直接在此处设置主BGM的AudioClip")][SerializeField] private AudioClip mainBGMClipAsset; // 新增：在Inspector中设置的主BGM
+    private AudioClip mainBGMClip; // 内部使用的实际播放的clip
+    private Coroutine bgmFadeCoroutine; // 用于控制BGM渐变
 
     [Header("音效设置")]
     [Tooltip("按钮点击音效")]
@@ -44,6 +50,18 @@ public class AudioManager : MonoBehaviourSingleton<AudioManager>
         bgmSource.loop = true;
         bgmSource.playOnAwake = false;
         bgmSource.volume = BGMVolume;
+
+        // 尝试加载并播放主BGM
+        if (mainBGMClipAsset != null)
+        {
+            mainBGMClip = mainBGMClipAsset; // 将Inspector中设置的clip赋给内部变量
+            PlayBGM(mainBGMClip, true, 0f); // 初始播放，可无渐变
+            Debug.Log($"主BGM '{mainBGMClip.name}' 已通过Inspector设置并开始播放。");
+        }
+        else
+        {
+            Debug.LogWarning("主BGM AudioClip 未在 AudioManager Inspector 中设置。");
+        }
 
         // 创建音效音源
         GameObject sfxObj = new GameObject("SFX Source");
@@ -86,13 +104,88 @@ public class AudioManager : MonoBehaviourSingleton<AudioManager>
         SaveVolumeSettings();
     }
 
-    public void PlayBGM(AudioClip clip)
+    public void PlayBGM(AudioClip clip, bool loop = true, float fadeDuration = 1f)
     {
-        if (bgmSource != null && clip != null)
+        if (bgmSource == null || clip == null) return;
+
+        if (bgmFadeCoroutine != null)
         {
-            bgmSource.clip = clip;
-            bgmSource.Play();
+            StopCoroutine(bgmFadeCoroutine);
         }
+        bgmFadeCoroutine = StartCoroutine(FadeSwitchBGM(clip, loop, fadeDuration));
+    }
+
+    private IEnumerator FadeSwitchBGM(AudioClip newClip, bool loop, float duration)
+    {
+        float startVolume = bgmSource.volume; // 当前实际音量，可能已被渐变影响
+        float targetOverallVolume = BGMVolume; // 全局BGM目标音量
+
+        // 渐隐当前BGM (如果正在播放且有音频片段)
+        if (bgmSource.isPlaying && bgmSource.clip != null && duration > 0.01f) // 只有当duration足够大时才执行渐变
+        {
+            float fadeOutTime = duration / 2f;
+            float timer = 0f;
+            while (timer < fadeOutTime)
+            {
+                bgmSource.volume = Mathf.Lerp(startVolume, 0f, timer / fadeOutTime);
+                timer += Time.unscaledDeltaTime; // 使用 unscaledDeltaTime 以避免受 Time.timeScale 影响
+                yield return null;
+            }
+            bgmSource.Stop();
+            bgmSource.volume = 0; // 确保完全静音
+        }
+        else if (bgmSource.isPlaying) // 如果duration太短，直接停止
+        {
+            bgmSource.Stop();
+        }
+
+        // 切换到新的BGM并设置循环
+        bgmSource.clip = newClip;
+        bgmSource.loop = loop;
+        bgmSource.Play();
+
+        // 渐显新的BGM
+        if (duration > 0.01f)
+        {
+            float fadeInTime = duration / 2f;
+            float timer = 0f;
+            while (timer < fadeInTime)
+            {
+                bgmSource.volume = Mathf.Lerp(0f, targetOverallVolume, timer / fadeInTime);
+                timer += Time.unscaledDeltaTime;
+                yield return null;
+            }
+        }
+        bgmSource.volume = targetOverallVolume; // 确保达到目标音量
+        bgmFadeCoroutine = null;
+    }
+
+    // 新增：播放主BGM的方法
+    public void PlayMainBGM(float fadeDuration = 1f)
+    {
+        if (mainBGMClip != null)
+        {
+            // 只有当当前播放的不是主BGM，或者BGM没有在播放时，才切换
+            if (bgmSource.clip != mainBGMClip || !bgmSource.isPlaying)
+            {
+                PlayBGM(mainBGMClip, true, fadeDuration);
+                Debug.Log("开始播放主BGM。");
+            }
+            else
+            {
+                Debug.Log("主BGM已在播放，无需切换。");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("主BGM片段 (mainBGMClip) 未加载，无法播放主BGM。");
+        }
+    }
+
+    // 新增：检查当前是否正在播放主BGM
+    public bool IsPlayingMainBGM()
+    {
+        return bgmSource != null && bgmSource.clip == mainBGMClip && bgmSource.isPlaying;
     }
 
     public void PlaySFX(AudioClip clip)

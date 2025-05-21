@@ -195,13 +195,7 @@ public class CGCollectPage : MonoBehaviour
                 Action callbackToReopenCollectPage = () => {
                     if (this != null && gameObject != null) // 确保 CGCollectPage 实例仍然有效
                     {
-                        // UIManager.HideAllCoreCanvases() 应该已被CGViewer的关闭流程或UIManager的ShowCGViewer的开头调用
-                        // 我们只需要重新激活 CGCollectPage 的 Canvas
-                        // UIManager.Instance.ShowCGCollectPage(); // 这个方法会隐藏其他所有Canvas，正是我们想要的
-                        // 然而，如果 CGViewer 的关闭没有正确调用 HideAllCoreCanvases (例如，如果回调直接在 CGViewer 内部触发关闭)，
-                        // 并且CGViewer实例被销毁了，直接调用ShowCGCollectPage是安全的。
-
-                        Debug.Log("CGCollectPage: Callback executed. Re-showing CG Collect Page.");
+                        Debug.Log("CGCollectPage: Callback executed. Re-showing CG Collect Page and playing main BGM.");
                         if (UIManager.Instance != null) 
                         {
                             UIManager.Instance.ShowCGCollectPage();
@@ -209,8 +203,23 @@ public class CGCollectPage : MonoBehaviour
                         else
                         {
                              Debug.LogError("CGCollectPage Callback: UIManager instance is null when trying to re-show collect page.");
-                             // 作为后备，可以尝试手动激活，但这不是理想状态
-                             // gameObject.SetActive(true); 
+                        }
+                        
+                        // 在此处添加：播放主BGM
+                        if (AudioManager.Instance != null)
+                        {
+                            if (!AudioManager.Instance.IsPlayingMainBGM())
+                            {
+                                AudioManager.Instance.PlayMainBGM(0.5f); // 使用合适的渐变时间
+                            }
+                            else
+                            {
+                                Debug.Log("CGCollectPage Callback: Main BGM is already playing.");
+                            }
+                        }
+                        else
+                        {
+                            Debug.LogError("CGCollectPage Callback: AudioManager instance is null when trying to play main BGM.");
                         }
                     }
                     else

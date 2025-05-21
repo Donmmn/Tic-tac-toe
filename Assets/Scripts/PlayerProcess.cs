@@ -45,6 +45,8 @@ public class Ending
     public string title;
     public string[] EndingText;
     public string[] ImagesName;
+    public string BackgroundImagePath; // 新增：结局背景图片路径
+    public string BGMusicPath;         // 新增：结局背景音乐路径
 }
     
 // 新增：用于保存和加载玩家进度的包装类
