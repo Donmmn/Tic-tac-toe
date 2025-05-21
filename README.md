@@ -13,13 +13,13 @@
 2.  **克隆项目**：
     使用常规的 `git clone` 命令克隆本仓库：
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/Donmmn/Tic-tac-toe.git
     ```
 
 3.  **拉取 LFS 文件**：
     克隆完成后，项目中的大文件（如美术素材）可能仅为指针文件。您需要执行以下命令来下载这些文件的实际内容：
     ```bash
-    cd <repository-name>
+    cd Tic-tac-toe
     git lfs pull
     ```
 
