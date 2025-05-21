@@ -1,0 +1,172 @@
+{
+    "allEventSettings": [
+        {
+            "eventIdentifier": "OnPlayerWinsGame",
+            "moodEffect": 0.0,
+            "sanityEffect": 5.0,
+            "dialogueTriggerProbability": 0.7699999809265137,
+            "emotionChances": [
+                {
+                    "targetEmotion": 5,
+                    "weight": 1.0,
+                    "selectedDialogueIndex": 1
+                },
+                {
+                    "targetEmotion": 0,
+                    "weight": 1.0,
+                    "selectedDialogueIndex": 1
+                },
+                {
+                    "targetEmotion": 3,
+                    "weight": 1.0,
+                    "selectedDialogueIndex": 0
+                },
+                {
+                    "targetEmotion": 5,
+                    "weight": 1.0,
+                    "selectedDialogueIndex": 0
+                }
+            ],
+            "isFoldedOut": true
+        },
+        {
+            "eventIdentifier": "OnAIWinsGame",
+            "moodEffect": 15.0,
+            "sanityEffect": 10.0,
+            "dialogueTriggerProbability": 1.0,
+            "emotionChances": [
+                {
+                    "targetEmotion": 1,
+                    "weight": 3.0,
+                    "selectedDialogueIndex": 0
+                },
+                {
+                    "targetEmotion": 3,
+                    "weight": 3.0,
+                    "selectedDialogueIndex": 1
+                },
+                {
+                    "targetEmotion": 4,
+                    "weight": 1.0,
+                    "selectedDialogueIndex": 0
+                }
+            ],
+            "isFoldedOut": true
+        },
+        {
+            "eventIdentifier": "OnGameDraw",
+            "moodEffect": -2.0,
+            "sanityEffect": -2.0,
+            "dialogueTriggerProbability": 0.4000000059604645,
+            "emotionChances": [
+                {
+                    "targetEmotion": 4,
+                    "weight": 1.0,
+                    "selectedDialogueIndex": 2
+                },
+                {
+                    "targetEmotion": 0,
+                    "weight": 1.0,
+                    "selectedDialogueIndex": 1
+                },
+                {
+                    "targetEmotion": 6,
+                    "weight": 1.0,
+                    "selectedDialogueIndex": 1
+                }
+            ],
+            "isFoldedOut": true
+        },
+        {
+            "eventIdentifier": "OnPlayerAlmostWins",
+            "moodEffect": -5.0,
+            "sanityEffect": 2.0,
+            "dialogueTriggerProbability": 0.20000000298023225,
+            "emotionChances": [
+                {
+                    "targetEmotion": 0,
+                    "weight": 1.0,
+                    "selectedDialogueIndex": 3
+                },
+                {
+                    "targetEmotion": 4,
+                    "weight": 1.0,
+                    "selectedDialogueIndex": 1
+                }
+            ],
+            "isFoldedOut": false
+        },
+        {
+            "eventIdentifier": "OnAIAlmostWins",
+            "moodEffect": 5.0,
+            "sanityEffect": -1.0,
+            "dialogueTriggerProbability": 0.20000000298023225,
+            "emotionChances": [
+                {
+                    "targetEmotion": 4,
+                    "weight": 1.0,
+                    "selectedDialogueIndex": 0
+                },
+                {
+                    "targetEmotion": 3,
+                    "weight": 1.0,
+                    "selectedDialogueIndex": 1
+                }
+            ],
+            "isFoldedOut": true
+        },
+        {
+            "eventIdentifier": "OnBoardReset",
+            "moodEffect": 5.0,
+            "sanityEffect": 0.0,
+            "dialogueTriggerProbability": 0.20000000298023225,
+            "emotionChances": [
+                {
+                    "targetEmotion": 0,
+                    "weight": 1.0,
+                    "selectedDialogueIndex": 1
+                },
+                {
+                    "targetEmotion": 0,
+                    "weight": 1.0,
+                    "selectedDialogueIndex": -1
+                }
+            ],
+            "isFoldedOut": true
+        },
+        {
+            "eventIdentifier": "OnPlayerBlockedAIWin",
+            "moodEffect": -1.0,
+            "sanityEffect": -8.0,
+            "dialogueTriggerProbability": 0.6000000238418579,
+            "emotionChances": [
+                {
+                    "targetEmotion": 2,
+                    "weight": 1.0,
+                    "selectedDialogueIndex": 0
+                },
+                {
+                    "targetEmotion": 0,
+                    "weight": 1.0,
+                    "selectedDialogueIndex": 3
+                },
+                {
+                    "targetEmotion": 0,
+                    "weight": 1.0,
+                    "selectedDialogueIndex": 4
+                },
+                {
+                    "targetEmotion": 5,
+                    "weight": 2.0,
+                    "selectedDialogueIndex": 1
+                },
+                {
+                    "targetEmotion": 6,
+                    "weight": 1.0,
+                    "selectedDialogueIndex": 0
+                }
+            ],
+            "isFoldedOut": true
+        }
+    ]
+}
