@@ -33,6 +33,9 @@
 
 ## 游戏概览与核心玩法
 
+**核心游玩演示：**
+![游玩演示](Assets/Resources/Image/演示素材/游玩演示.gif)
+
 ![游戏教程示例1](Assets/Resources/Image/演示素材/教程图1.png)
 
 ### 游戏玩法
